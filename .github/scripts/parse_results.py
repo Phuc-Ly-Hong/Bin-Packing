@@ -21,55 +21,78 @@ else:
         instance_name = os.path.basename(out_file)[:-4]
         try:
             with open(out_file, 'r') as f:
-                lines = [line.strip() for line in f.readlines() if line.strip()]
+                content = f.read().strip()
             
-            if not lines:
+            if not content:
                 error_count += 1
                 results.append({"instance": instance_name, "status": "error", "error": "Empty output"})
                 continue
 
-            # Khởi tạo các biến để tìm kiếm thông tin từ file output mới
-            num_packages = 0
-            total_cost_inst = 0
-            is_feasible = True # Hoặc sửa tùy thuộc vào điều kiện Penalty/Feasible của bạn
-            time_ms = 0.0
-            solution_lines = []
-            is_solution_block = False
+            # Tách nội dung thành các từ/số riêng biệt
+            parts = content.split()
 
-            # Duyệt từng dòng để bóc tách thông tin chính xác
-            for line in lines:
-                if "Total Packages Served:" in line:
-                    num_packages = int(line.split(":")[-1].strip())
-                elif "Total Cost:" in line:
-                    # Tách chuỗi lấy phần giá trị số của cost (bỏ qua phần chữ Penalty phía sau nếu có)
-                    cost_part = line.split(":")[1].strip().split()[0]
-                    total_cost_inst = int(float(cost_part)) # Ép kiểu phòng trường hợp là số thực
-                elif "Execution Time:" in line:
-                    time_ms = float(line.split(":")[1].strip().split()[0]) * 1000.0 # Đổi s sang ms nếu cần, hoặc giữ nguyên tùy đơn vị dữ liệu cũ
-                elif "DETAILED SOLUTION:" in line:
-                    is_solution_block = True
+            # KIỂM TRA ĐỊNH DẠNG OUTPUT:
+            # Nếu file chứa chuỗi tiêu đề "=========================" (Hệ thống mới)
+            if "====" in content or "SOLVED" in content:
+                num_packages = 0
+                total_cost_inst = 0
+                time_ms = 0.0
+                solution_parts = []
+                is_solution_block = False
+
+                lines = content.splitlines()
+                for line in lines:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    if "Total Packages Served:" in line:
+                        num_packages = int(line.split(":")[-1].strip())
+                    elif "Total Cost:" in line:
+                        # Lấy số đầu tiên sau dấu hai chấm (bỏ qua phần Penalty phía sau)
+                        cost_str = line.split(":")[1].strip().split()[0]
+                        total_cost_inst = int(float(cost_str))
+                    elif "Execution Time:" in line:
+                        # Lấy số giây và đổi sang mili-giây (ms) giống định dạng cũ của bạn
+                        time_str = line.split(":")[1].strip().split()[0]
+                        time_ms = float(time_str) * 1000.0
+                    elif "DETAILED SOLUTION:" in line:
+                        is_solution_block = True
+                        continue
+                    
+                    # Nếu đang ở trong khối solution, lấy các cặp "id_gói id_xe"
+                    if is_solution_block:
+                        solution_parts.append(line)
+
+                # Dòng đầu của solution block thường là số gói hàng (theo hàm output_solution gốc)
+                # Ta gộp toàn bộ các dòng còn lại thành chuỗi solution nằm ngang cho file JSON
+                solution = " ".join(solution_parts)
+                is_feasible = True if total_cost_inst >= 0 else False
+
+            # Định dạng GỐC của bạn (Chỉ gồm chuỗi số cách nhau bằng khoảng trắng trên 1 dòng)
+            else:
+                if len(parts) < 4:
+                    error_count += 1
+                    results.append({"instance": instance_name, "status": "error", "error": "Invalid output format"})
                     continue
-                
-                # Nếu đã bước vào block Solution, gom toàn bộ các dòng id_gói id_xe lại
-                if is_solution_block:
-                    solution_lines.append(line)
+                num_packages = int(parts[0])
+                total_cost_inst = int(parts[1])
+                is_feasible = bool(int(parts[2]))
+                time_ms = float(parts[-1])
+                solution = " ".join(parts[3:-1])
 
-            # Khôi phục chuỗi solution thu gọn thành 1 dòng để lưu vào json
-            solution = " ".join(solution_lines)
-
-            # Check tính đúng đắn (Mặc định nếu cost > -1 hoặc lấy được hàng thì coi như tìm được nghiệm)
-            if total_cost_inst >= 0:
+            # Tính toán tổng hợp kết quả (Chỉ cộng cost nếu giải nghiệm thành công)
+            if is_feasible:
                 feasible_count += 1
-                
+                total_cost += total_cost_inst
+            
             total_time += time_ms
-            total_cost += max(0, total_cost_inst)
 
             results.append({
                 "instance": instance_name,
                 "status": "success",
                 "num_packages": num_packages,
                 "total_cost": total_cost_inst,
-                "is_feasible": True if total_cost_inst >= 0 else False,
+                "is_feasible": is_feasible,
                 "solution": solution,
                 "time_ms": time_ms
             })
