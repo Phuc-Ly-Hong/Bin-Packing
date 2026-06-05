@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 #include <unordered_set>
+#include <chrono>
 using namespace std;
 
 // ==================== DATA STRUCTURES ====================
@@ -87,19 +88,19 @@ void update_weights() {
 
 // ==================== INPUT / OUTPUT ====================
 
-void read_input() {
-    if (!(cin >> N >> K)) return;
+void read_input(istream& in) {
+    if (!(in >> N >> K)) return;
 
     orders.resize(N);
     for (int i = 0; i < N; i++) {
         orders[i].id = i + 1;
-        cin >> orders[i].d >> orders[i].c;
+        in >> orders[i].d >> orders[i].c;
     }
 
     vehicles.resize(K);
     for (int k = 0; k < K; k++) {
         vehicles[k].id = k + 1;
-        cin >> vehicles[k].c1 >> vehicles[k].c2;
+        in >> vehicles[k].c1 >> vehicles[k].c2;
     }
 
     // Tối ưu cho N lớn: Giảm iterations nhưng tăng tốc độ
@@ -113,7 +114,7 @@ void read_input() {
     TABU_TENURE = 5; 
 }
 
-void output_solution(const Solution& sol) {
+void output_solution(const Solution& sol, double elapsed_ms = 0.0) {
     vector<pair<int,int>> served;
     for (int k = 1; k <= K; k++) {
         for (int oid : sol.bins[k]) {
@@ -122,10 +123,15 @@ void output_solution(const Solution& sol) {
     }
     sort(served.begin(), served.end());
 
-    cout << served.size() << "\n";
+    // Format: num_packages totalCost isFeisible solution_string time_ms
+    cout << served.size() << " " << (int)sol.total_cost << " " 
+         << (sol.is_feasible ? "1" : "0");
+    
     for (auto& p : served) {
-        cout << p.first << " " << p.second << "\n";
+        cout << " " << p.first << " " << p.second;
     }
+    
+    cout << " " << fixed << setprecision(2) << elapsed_ms << "\n";
 }
 
 // ==================== EVALUATION ====================
@@ -762,15 +768,34 @@ Solution tabu_search() {
     return best;
 }
 
-int main() {
+int main(int argc, char* argv[]) {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
     srand(42);
-
-    read_input();
+    auto start_time = chrono::high_resolution_clock::now();
+    
+    if (argc > 1) {
+        string filename = argv[1];
+        ifstream infile(filename);
+        
+        if (!infile.is_open()) {
+            cerr << "Error: Cannot open file '" << filename << "'\n";
+            return 1;
+        }
+        
+        read_input(infile);
+        infile.close();
+    } else {
+        read_input(cin);
+    }
+    
     Solution best = tabu_search();
-    output_solution(best);
+    
+    auto end_time = chrono::high_resolution_clock::now();
+    double elapsed_ms = chrono::duration<double, milli>(end_time - start_time).count();
+    
+    output_solution(best, elapsed_ms);
 
     return 0;
 }
