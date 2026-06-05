@@ -12,7 +12,7 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Set matrix for test directories
         id: set-matrix
@@ -30,7 +30,7 @@ jobs:
           chmod +x binpacking
       
       - name: Upload executable
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: executable
           path: binpacking
@@ -45,10 +45,10 @@ jobs:
       fail-fast: false
     
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Download executable
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: executable
       
@@ -72,7 +72,7 @@ jobs:
           python3 .github/scripts/parse_results.py "$OUTPUT_DIR" "${{ matrix.testdir }}"
       
       - name: Upload results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: results-${{ matrix.testdir }}
           path: results/${{ matrix.testdir }}
@@ -84,10 +84,10 @@ jobs:
     if: always()
     
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Download all results
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           path: all-results
       
@@ -97,7 +97,7 @@ jobs:
           python3 .github/scripts/aggregate_results.py
       
       - name: Upload final report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: benchmark-report
           path: final-report
