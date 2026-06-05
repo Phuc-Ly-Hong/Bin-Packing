@@ -138,9 +138,7 @@ void output_solution(const Solution& sol, double elapsed_ms = 0.0) {
 
 inline double get_perf_penalty(int k, int load) {
     if (k == 0) return 0.0;
-    if (load == 0) {
-        return vehicles[k-1].c1 > 0 ? vehicles[k-1].c1 : 0.0;
-    }
+    if (load == 0) return 0.0;   
     if (load < vehicles[k-1].c1) {
         return (vehicles[k-1].c1 - load);
     } else if (load > vehicles[k-1].c2) {
