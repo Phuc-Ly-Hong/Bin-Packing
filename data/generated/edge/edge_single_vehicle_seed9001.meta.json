@@ -1,0 +1,16 @@
+{
+  "name": "edge_single_vehicle_seed9001",
+  "kind": "edge_single_vehicle",
+  "description": "K=1, quy về Knapsack đơn",
+  "seed": 9001,
+  "actual": {
+    "N": 15,
+    "K": 1
+  },
+  "stats": {
+    "total_demand": 437,
+    "total_capacity": 305,
+    "total_value": 731
+  },
+  "profile": "edge_cases"
+}

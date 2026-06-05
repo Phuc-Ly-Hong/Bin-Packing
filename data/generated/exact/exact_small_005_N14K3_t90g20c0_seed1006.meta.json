@@ -1,0 +1,42 @@
+{
+  "name": "exact_small_005_N14K3_t90g20c0_seed1006",
+  "seed": 1006,
+  "requested": {
+    "N": 14,
+    "K": 3,
+    "tightness": 0.9,
+    "gap_ratio": 0.2,
+    "correlation": 0.0
+  },
+  "actual": {
+    "N": 14,
+    "K": 3,
+    "tightness": 0.9579,
+    "gap_avg": 0.2389,
+    "correlation": 0.1568
+  },
+  "stats": {
+    "total_demand": 614,
+    "total_capacity": 641,
+    "total_value": 749,
+    "d_range": [
+      20,
+      80
+    ],
+    "c_range": [
+      6,
+      99
+    ],
+    "c1_range": [
+      127,
+      201
+    ],
+    "c2_range": [
+      161,
+      267
+    ]
+  },
+  "d_max_used": 100,
+  "profile": "exact_small",
+  "repeat": 0
+}

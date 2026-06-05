@@ -1,0 +1,42 @@
+{
+  "name": "sweep_gap_013_N80K8_t85g70c0_seed3014",
+  "seed": 3014,
+  "requested": {
+    "N": 80,
+    "K": 8,
+    "tightness": 0.85,
+    "gap_ratio": 0.7,
+    "correlation": 0.0
+  },
+  "actual": {
+    "N": 80,
+    "K": 8,
+    "tightness": 0.8027,
+    "gap_avg": 0.7127,
+    "correlation": 0.1004
+  },
+  "stats": {
+    "total_demand": 3722,
+    "total_capacity": 4637,
+    "total_value": 4015,
+    "d_range": [
+      1,
+      100
+    ],
+    "c_range": [
+      1,
+      100
+    ],
+    "c1_range": [
+      51,
+      327
+    ],
+    "c2_range": [
+      396,
+      697
+    ]
+  },
+  "d_max_used": 100,
+  "profile": "sweep_gap",
+  "repeat": 1
+}

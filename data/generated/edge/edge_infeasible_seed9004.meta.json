@@ -1,0 +1,16 @@
+{
+  "name": "edge_infeasible_seed9004",
+  "kind": "edge_infeasible",
+  "description": "L_k > Σd → optimal = 0 (empty solution)",
+  "seed": 9004,
+  "actual": {
+    "N": 30,
+    "K": 5
+  },
+  "stats": {
+    "total_demand": 164,
+    "total_capacity": 1850,
+    "total_value": 1466
+  },
+  "profile": "edge_cases"
+}

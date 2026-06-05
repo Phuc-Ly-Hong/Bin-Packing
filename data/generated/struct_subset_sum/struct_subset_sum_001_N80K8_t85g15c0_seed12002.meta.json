@@ -1,0 +1,43 @@
+{
+  "name": "struct_subset_sum_001_N80K8_t85g15c0_seed12002",
+  "seed": 12002,
+  "requested": {
+    "N": 80,
+    "K": 8,
+    "tightness": 0.85,
+    "gap_ratio": 0.15,
+    "correlation": 0.0,
+    "value_structure": "subset_sum"
+  },
+  "actual": {
+    "N": 80,
+    "K": 8,
+    "tightness": 0.8511,
+    "gap_avg": 0.1473,
+    "correlation": 1.0
+  },
+  "stats": {
+    "total_demand": 4012,
+    "total_capacity": 4714,
+    "total_value": 4012,
+    "d_range": [
+      1,
+      100
+    ],
+    "c_range": [
+      1,
+      100
+    ],
+    "c1_range": [
+      392,
+      674
+    ],
+    "c2_range": [
+      476,
+      761
+    ]
+  },
+  "d_max_used": 100,
+  "profile": "struct_subset_sum",
+  "repeat": 1
+}

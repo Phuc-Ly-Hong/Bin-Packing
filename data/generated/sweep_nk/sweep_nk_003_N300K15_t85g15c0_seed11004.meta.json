@@ -1,0 +1,43 @@
+{
+  "name": "sweep_nk_003_N300K15_t85g15c0_seed11004",
+  "seed": 11004,
+  "requested": {
+    "N": 300,
+    "K": 15,
+    "tightness": 0.85,
+    "gap_ratio": 0.15,
+    "correlation": 0.0,
+    "value_structure": "uniform"
+  },
+  "actual": {
+    "N": 300,
+    "K": 15,
+    "tightness": 0.8275,
+    "gap_avg": 0.1466,
+    "correlation": 0.0099
+  },
+  "stats": {
+    "total_demand": 8872,
+    "total_capacity": 10722,
+    "total_value": 15978,
+    "d_range": [
+      1,
+      59
+    ],
+    "c_range": [
+      1,
+      100
+    ],
+    "c1_range": [
+      441,
+      759
+    ],
+    "c2_range": [
+      527,
+      883
+    ]
+  },
+  "d_max_used": 59,
+  "profile": "sweep_nk",
+  "repeat": 1
+}

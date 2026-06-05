@@ -1,0 +1,43 @@
+{
+  "name": "hard_scale_003_N300K30_t110g15c0_seed8004",
+  "seed": 8004,
+  "requested": {
+    "N": 300,
+    "K": 30,
+    "tightness": 1.1,
+    "gap_ratio": 0.15,
+    "correlation": 0.0,
+    "value_structure": "uniform"
+  },
+  "actual": {
+    "N": 300,
+    "K": 30,
+    "tightness": 1.0732,
+    "gap_avg": 0.1606,
+    "correlation": 0.0117
+  },
+  "stats": {
+    "total_demand": 14944,
+    "total_capacity": 13925,
+    "total_value": 15305,
+    "d_range": [
+      1,
+      100
+    ],
+    "c_range": [
+      1,
+      100
+    ],
+    "c1_range": [
+      270,
+      519
+    ],
+    "c2_range": [
+      323,
+      584
+    ]
+  },
+  "d_max_used": 100,
+  "profile": "hard_scale",
+  "repeat": 1
+}

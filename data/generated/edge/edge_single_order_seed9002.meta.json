@@ -1,0 +1,16 @@
+{
+  "name": "edge_single_order_seed9002",
+  "kind": "edge_single_order",
+  "description": "N=1, trivial — chỉ 1 đơn, K xe",
+  "seed": 9002,
+  "actual": {
+    "N": 1,
+    "K": 5
+  },
+  "stats": {
+    "total_demand": 32,
+    "total_capacity": 400,
+    "total_value": 94
+  },
+  "profile": "edge_cases"
+}

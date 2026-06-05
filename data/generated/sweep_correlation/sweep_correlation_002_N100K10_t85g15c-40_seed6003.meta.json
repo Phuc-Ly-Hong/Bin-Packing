@@ -1,0 +1,42 @@
+{
+  "name": "sweep_correlation_002_N100K10_t85g15c-40_seed6003",
+  "seed": 6003,
+  "requested": {
+    "N": 100,
+    "K": 10,
+    "tightness": 0.85,
+    "gap_ratio": 0.15,
+    "correlation": -0.4
+  },
+  "actual": {
+    "N": 100,
+    "K": 10,
+    "tightness": 0.8115,
+    "gap_avg": 0.1506,
+    "correlation": -0.8631
+  },
+  "stats": {
+    "total_demand": 4803,
+    "total_capacity": 5919,
+    "total_value": 5225,
+    "d_range": [
+      1,
+      100
+    ],
+    "c_range": [
+      1,
+      100
+    ],
+    "c1_range": [
+      361,
+      627
+    ],
+    "c2_range": [
+      410,
+      724
+    ]
+  },
+  "d_max_used": 100,
+  "profile": "sweep_correlation",
+  "repeat": 0
+}

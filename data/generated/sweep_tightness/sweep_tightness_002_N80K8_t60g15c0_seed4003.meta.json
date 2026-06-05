@@ -1,0 +1,42 @@
+{
+  "name": "sweep_tightness_002_N80K8_t60g15c0_seed4003",
+  "seed": 4003,
+  "requested": {
+    "N": 80,
+    "K": 8,
+    "tightness": 0.6,
+    "gap_ratio": 0.15,
+    "correlation": 0.0
+  },
+  "actual": {
+    "N": 80,
+    "K": 8,
+    "tightness": 0.6301,
+    "gap_avg": 0.1379,
+    "correlation": 0.0259
+  },
+  "stats": {
+    "total_demand": 3201,
+    "total_capacity": 5080,
+    "total_value": 3814,
+    "d_range": [
+      2,
+      84
+    ],
+    "c_range": [
+      1,
+      100
+    ],
+    "c1_range": [
+      401,
+      715
+    ],
+    "c2_range": [
+      468,
+      829
+    ]
+  },
+  "d_max_used": 84,
+  "profile": "sweep_tightness",
+  "repeat": 2
+}

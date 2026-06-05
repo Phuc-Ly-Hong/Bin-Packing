@@ -1,0 +1,43 @@
+{
+  "name": "interact_rho_gap_004_N300K30_t105g5c0_seed10005",
+  "seed": 10005,
+  "requested": {
+    "N": 300,
+    "K": 30,
+    "tightness": 1.05,
+    "gap_ratio": 0.05,
+    "correlation": 0.0,
+    "value_structure": "uniform"
+  },
+  "actual": {
+    "N": 300,
+    "K": 30,
+    "tightness": 1.0672,
+    "gap_avg": 0.0489,
+    "correlation": -0.0896
+  },
+  "stats": {
+    "total_demand": 14484,
+    "total_capacity": 13572,
+    "total_value": 15363,
+    "d_range": [
+      1,
+      100
+    ],
+    "c_range": [
+      1,
+      100
+    ],
+    "c1_range": [
+      306,
+      559
+    ],
+    "c2_range": [
+      324,
+      585
+    ]
+  },
+  "d_max_used": 100,
+  "profile": "interact_rho_gap",
+  "repeat": 0
+}

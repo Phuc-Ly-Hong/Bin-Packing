@@ -1,0 +1,43 @@
+{
+  "name": "struct_subset_sum_002_N300K30_t85g15c0_seed12003",
+  "seed": 12003,
+  "requested": {
+    "N": 300,
+    "K": 30,
+    "tightness": 0.85,
+    "gap_ratio": 0.15,
+    "correlation": 0.0,
+    "value_structure": "subset_sum"
+  },
+  "actual": {
+    "N": 300,
+    "K": 30,
+    "tightness": 0.8793,
+    "gap_avg": 0.1518,
+    "correlation": 1.0
+  },
+  "stats": {
+    "total_demand": 14829,
+    "total_capacity": 16864,
+    "total_value": 14829,
+    "d_range": [
+      1,
+      99
+    ],
+    "c_range": [
+      1,
+      99
+    ],
+    "c1_range": [
+      337,
+      641
+    ],
+    "c2_range": [
+      414,
+      739
+    ]
+  },
+  "d_max_used": 100,
+  "profile": "struct_subset_sum",
+  "repeat": 0
+}

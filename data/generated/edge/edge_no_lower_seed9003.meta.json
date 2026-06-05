@@ -1,0 +1,16 @@
+{
+  "name": "edge_no_lower_seed9003",
+  "kind": "edge_no_lower",
+  "description": "L_k = 1 cho mọi k → không có cận dưới hiệu lực",
+  "seed": 9003,
+  "actual": {
+    "N": 30,
+    "K": 5
+  },
+  "stats": {
+    "total_demand": 1399,
+    "total_capacity": 1556,
+    "total_value": 1542
+  },
+  "profile": "edge_cases"
+}

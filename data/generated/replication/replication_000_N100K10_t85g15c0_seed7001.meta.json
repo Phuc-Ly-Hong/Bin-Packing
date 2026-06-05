@@ -1,0 +1,42 @@
+{
+  "name": "replication_000_N100K10_t85g15c0_seed7001",
+  "seed": 7001,
+  "requested": {
+    "N": 100,
+    "K": 10,
+    "tightness": 0.85,
+    "gap_ratio": 0.15,
+    "correlation": 0.0
+  },
+  "actual": {
+    "N": 100,
+    "K": 10,
+    "tightness": 0.8708,
+    "gap_avg": 0.1541,
+    "correlation": 0.0074
+  },
+  "stats": {
+    "total_demand": 5168,
+    "total_capacity": 5935,
+    "total_value": 5304,
+    "d_range": [
+      2,
+      100
+    ],
+    "c_range": [
+      6,
+      100
+    ],
+    "c1_range": [
+      386,
+      655
+    ],
+    "c2_range": [
+      441,
+      782
+    ]
+  },
+  "d_max_used": 100,
+  "profile": "replication",
+  "repeat": 0
+}

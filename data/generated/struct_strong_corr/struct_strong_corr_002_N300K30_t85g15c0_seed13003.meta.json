@@ -1,0 +1,43 @@
+{
+  "name": "struct_strong_corr_002_N300K30_t85g15c0_seed13003",
+  "seed": 13003,
+  "requested": {
+    "N": 300,
+    "K": 30,
+    "tightness": 0.85,
+    "gap_ratio": 0.15,
+    "correlation": 0.0,
+    "value_structure": "strongly_correlated"
+  },
+  "actual": {
+    "N": 300,
+    "K": 30,
+    "tightness": 0.8315,
+    "gap_avg": 0.1482,
+    "correlation": 0.9982
+  },
+  "stats": {
+    "total_demand": 15048,
+    "total_capacity": 18098,
+    "total_value": 17873,
+    "d_range": [
+      1,
+      100
+    ],
+    "c_range": [
+      11,
+      100
+    ],
+    "c1_range": [
+      361,
+      673
+    ],
+    "c2_range": [
+      426,
+      758
+    ]
+  },
+  "d_max_used": 100,
+  "profile": "struct_strong_corr",
+  "repeat": 0
+}

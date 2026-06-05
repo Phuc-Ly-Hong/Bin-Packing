@@ -1,0 +1,42 @@
+{
+  "name": "sweep_size_006_N600K60_t85g15c0_seed5007",
+  "seed": 5007,
+  "requested": {
+    "N": 600,
+    "K": 60,
+    "tightness": 0.85,
+    "gap_ratio": 0.15,
+    "correlation": 0.0
+  },
+  "actual": {
+    "N": 600,
+    "K": 60,
+    "tightness": 0.8652,
+    "gap_avg": 0.1515,
+    "correlation": -0.0198
+  },
+  "stats": {
+    "total_demand": 30209,
+    "total_capacity": 34915,
+    "total_value": 30327,
+    "d_range": [
+      1,
+      100
+    ],
+    "c_range": [
+      1,
+      100
+    ],
+    "c1_range": [
+      349,
+      654
+    ],
+    "c2_range": [
+      418,
+      754
+    ]
+  },
+  "d_max_used": 100,
+  "profile": "sweep_size",
+  "repeat": 0
+}

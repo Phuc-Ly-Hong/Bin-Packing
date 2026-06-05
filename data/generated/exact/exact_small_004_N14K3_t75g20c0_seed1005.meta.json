@@ -1,0 +1,42 @@
+{
+  "name": "exact_small_004_N14K3_t75g20c0_seed1005",
+  "seed": 1005,
+  "requested": {
+    "N": 14,
+    "K": 3,
+    "tightness": 0.75,
+    "gap_ratio": 0.2,
+    "correlation": 0.0
+  },
+  "actual": {
+    "N": 14,
+    "K": 3,
+    "tightness": 0.6655,
+    "gap_avg": 0.2131,
+    "correlation": 0.0264
+  },
+  "stats": {
+    "total_demand": 762,
+    "total_capacity": 1145,
+    "total_value": 803,
+    "d_range": [
+      9,
+      98
+    ],
+    "c_range": [
+      18,
+      96
+    ],
+    "c1_range": [
+      274,
+      329
+    ],
+    "c2_range": [
+      327,
+      430
+    ]
+  },
+  "d_max_used": 100,
+  "profile": "exact_small",
+  "repeat": 0
+}
