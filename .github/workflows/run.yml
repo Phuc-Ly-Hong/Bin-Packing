@@ -59,93 +59,17 @@ jobs:
         id: benchmark
         run: |
           mkdir -p results
-          
           TEST_DIR="data/generated/${{ matrix.testdir }}"
           OUTPUT_DIR="results/${{ matrix.testdir }}"
           mkdir -p "$OUTPUT_DIR"
-          
-          # Find all .txt files and run each one
           for instance in "$TEST_DIR"/*.txt; do
             if [ -f "$instance" ]; then
               instance_name=$(basename "$instance" .txt)
               echo "Running: $instance_name"
-              
-              # Run and save output
               ./binpacking "$instance" > "$OUTPUT_DIR/${instance_name}.out" 2>&1 || true
             fi
           done
-          
-          # Create summary for this category using Python
-          python3 << 'PYEOF'
-import os
-import json
-import glob
-
-output_dir = "results/${{ matrix.testdir }}"
-category = "${{ matrix.testdir }}"
-
-results = []
-total_time = 0.0
-total_cost = 0
-feasible_count = 0
-error_count = 0
-
-out_files = sorted(glob.glob(os.path.join(output_dir, "*.out")))
-if not out_files:
-    print(f"Warning: No output files found in {output_dir}")
-else:
-    for out_file in out_files:
-        instance_name = os.path.basename(out_file)[:-4]
-        try:
-            with open(out_file, 'r') as f:
-                output = f.read().strip()
-            if not output:
-                error_count += 1
-                results.append({"instance": instance_name, "status": "error", "error": "Empty output"})
-                continue
-            parts = output.split()
-            if len(parts) < 4:
-                error_count += 1
-                results.append({"instance": instance_name, "status": "error", "error": "Invalid output format"})
-                continue
-            num_packages = int(parts[0])
-            total_cost_inst = int(parts[1])
-            is_feasible = int(parts[2])
-            time_ms = float(parts[-1])
-            solution = " ".join(parts[3:-1])
-            if is_feasible:
-                feasible_count += 1
-            total_time += time_ms
-            total_cost += total_cost_inst
-            results.append({
-                "instance": instance_name,
-                "status": "success",
-                "num_packages": num_packages,
-                "total_cost": total_cost_inst,
-                "is_feasible": bool(is_feasible),
-                "solution": solution,
-                "time_ms": time_ms
-            })
-        except Exception as e:
-            error_count += 1
-            results.append({"instance": instance_name, "status": "error", "error": str(e)})
-
-    summary = {
-        "category": category,
-        "total_instances": len(results),
-        "feasible": feasible_count,
-        "errors": error_count,
-        "total_time_ms": total_time,
-        "avg_time_ms": total_time / len(results) if results else 0,
-        "total_cost": total_cost,
-        "avg_cost": total_cost / feasible_count if feasible_count > 0 else 0,
-        "results": results
-    }
-    summary_file = os.path.join(output_dir, "summary.json")
-    with open(summary_file, 'w') as f:
-        json.dump(summary, f, indent=2)
-    print(f"✓ {category}: {feasible_count}/{len(results)} feasible, {total_time:.2f}ms total")
-PYEOF
+          python3 .github/scripts/parse_results.py "$OUTPUT_DIR" "${{ matrix.testdir }}"
       
       - name: Upload results
         uses: actions/upload-artifact@v3
@@ -170,88 +94,7 @@ PYEOF
       - name: Aggregate results
         run: |
           mkdir -p final-report
-          python3 << 'PYEOF'
-import os
-import json
-import glob
-from datetime import datetime
-
-all_results = {}
-grand_total_instances = 0
-grand_total_feasible = 0
-grand_total_time = 0.0
-grand_total_cost = 0
-
-results_dirs = sorted(glob.glob("all-results/results-*"))
-for results_dir in results_dirs:
-    category = os.path.basename(results_dir).replace("results-", "")
-    summary_file = os.path.join(results_dir, "summary.json")
-    if os.path.exists(summary_file):
-        try:
-            with open(summary_file, 'r') as f:
-                summary = json.load(f)
-            all_results[category] = summary
-            grand_total_instances += summary.get("total_instances", 0)
-            grand_total_feasible += summary.get("feasible", 0)
-            grand_total_time += summary.get("total_time_ms", 0)
-            grand_total_cost += summary.get("total_cost", 0)
-        except Exception as e:
-            print(f"Warning: Failed to read {summary_file}: {e}")
-
-report = "# Benchmark Report\n\n"
-report += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
-report += "## Summary\n\n"
-report += f"- **Total Instances:** {grand_total_instances}\n"
-report += f"- **Feasible Solutions:** {grand_total_feasible}/{grand_total_instances}\n"
-report += f"- **Total Computation Time:** {grand_total_time:.2f}ms\n"
-report += f"- **Average Time per Instance:** {grand_total_time/grand_total_instances if grand_total_instances > 0 else 0:.2f}ms\n"
-report += f"- **Total Cost:** {grand_total_cost}\n"
-report += f"- **Average Cost:** {grand_total_cost/grand_total_feasible if grand_total_feasible > 0 else 0:.0f}\n\n"
-report += "## Results by Category\n\n"
-report += "| Category | Instances | Feasible | Avg Time (ms) | Avg Cost |\n"
-report += "|----------|-----------|----------|---------------|----------|\n"
-
-for category in sorted(all_results.keys()):
-    summary = all_results[category]
-    total = summary.get("total_instances", 0)
-    feasible = summary.get("feasible", 0)
-    avg_time = summary.get("avg_time_ms", 0)
-    avg_cost = summary.get("avg_cost", 0)
-    report += f"| {category} | {total} | {feasible} | {avg_time:.2f} | {avg_cost:.0f} |\n"
-
-report += "\n## Detailed Results\n\n"
-
-for category in sorted(all_results.keys()):
-    summary = all_results[category]
-    report += f"### {category}\n\n"
-    report += f"**Summary:** {summary.get('feasible', 0)}/{summary.get('total_instances', 0)} feasible, {summary.get('total_time_ms', 0):.2f}ms\n\n"
-    report += "| Instance | Cost | Feasible | Time (ms) | Solution |\n"
-    report += "|----------|------|----------|-----------|----------|\n"
-    for result in summary.get("results", []):
-        if result.get("status") == "success":
-            inst = result.get("instance", "unknown")
-            cost = result.get("total_cost", 0)
-            feasible = "✓" if result.get("is_feasible") else "✗"
-            time_ms = result.get("time_ms", 0)
-            solution = result.get("solution", "")[:80]
-            if len(result.get("solution", "")) > 80:
-                solution += "..."
-            report += f"| {inst} | {cost} | {feasible} | {time_ms:.2f} | `{solution}` |\n"
-        else:
-            inst = result.get("instance", "unknown")
-            error = result.get("error", "Unknown error")
-            report += f"| {inst} | - | ERROR | - | {error} |\n"
-    report += "\n"
-
-with open("final-report/BENCHMARK_RESULTS.md", 'w') as f:
-    f.write(report)
-
-with open("final-report/all_results.json", 'w') as f:
-    json.dump(all_results, f, indent=2)
-
-print("✓ Aggregation complete")
-print(f"  Total: {grand_total_instances} instances, {grand_total_feasible} feasible")
-PYEOF
+          python3 .github/scripts/aggregate_results.py
       
       - name: Upload final report
         uses: actions/upload-artifact@v3
