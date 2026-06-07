@@ -51,10 +51,10 @@ int TABU_TENURE;
 int MAX_NO_IMPROVE;
 int SEGMENT_LENGTH;
 
-vector<string> MOVE_SET = {"1-0", "1-1", "2-0", "2-1", "2-2"};
-vector<double> weights  = {1.0,   1.0,   1.0,   1.0,   1.0};
-vector<double> scorePi  = {0.0,   0.0,   0.0,   0.0,   0.0};
-vector<double> used_cnt = {0.0,   0.0,   0.0,   0.0,   0.0};
+vector<string> MOVE_SET = {"1-0", "1-1", "2-0"};
+vector<double> weights  = {1.0, 1.0, 1.0};
+vector<double> scorePi  = {0.0, 0.0, 0.0};
+vector<double> used_cnt = {0.0, 0.0, 0.0};
 
 const double delta1 = 0.3;
 const double delta2 = 0.2;
@@ -234,23 +234,6 @@ bool is_tabu(const vector<TabuMove>& tl, const TabuMove& m) {
                 t.v1 == m.v1 && t.v2 == m.v2)
                 return true;
         }
-        else if (m.type == "2-1") {
-            if (same_pair(t.order1, t.order2, m.order1, m.order2) &&
-                t.order3 == m.order3 && t.v1 == m.v1 && t.v2 == m.v2)
-                return true;
-            if (t.order1 == m.order3 && t.v1 == m.v2 && t.v2 == m.v1)
-                return true;
-        }
-        else if (m.type == "2-2") {
-            if (same_pair(t.order1, t.order2, m.order1, m.order2) &&
-                same_pair(t.order3, t.order4, m.order3, m.order4) &&
-                t.v1 == m.v1 && t.v2 == m.v2)
-                return true;
-            if (same_pair(t.order1, t.order2, m.order3, m.order4) &&
-                same_pair(t.order3, t.order4, m.order1, m.order2) &&
-                t.v1 == m.v2 && t.v2 == m.v1)
-                return true;
-        }
     }
     return false;
 }
@@ -316,77 +299,6 @@ void apply_2_0(Solution& sol, int v1, int pos1a, int pos1b, int v2, double new_c
 
     sol.bin_load[v1] -= d_total;
     sol.bin_load[v2] += d_total;
-
-    sol.total_cost = new_cost;
-    sol.penalty = new_penalty;
-    sol.fitness = new_fitness;
-    sol.is_feasible = (new_penalty < EPSILON);
-}
-
-void apply_2_1(Solution& sol, int v1, int pos1a, int pos1b, int v2, int pos2, double new_cost, double new_penalty, double new_fitness) {
-    int oid1 = sol.bins[v1][pos1a];
-    int oid2 = sol.bins[v1][pos1b];
-    int oid3 = sol.bins[v2][pos2];
-
-    int d12 = orders[oid1 - 1].d + orders[oid2 - 1].d;
-    int d3 = orders[oid3 - 1].d;
-
-    // Xóa v1
-    int hi = max(pos1a, pos1b);
-    int lo = min(pos1a, pos1b);
-    swap(sol.bins[v1][hi], sol.bins[v1].back());
-    sol.bins[v1].pop_back();
-    swap(sol.bins[v1][lo], sol.bins[v1].back());
-    sol.bins[v1].pop_back();
-
-    // Xóa v2
-    swap(sol.bins[v2][pos2], sol.bins[v2].back());
-    sol.bins[v2].pop_back();
-
-    // Thêm chéo chèn ngược lại
-    sol.bins[v1].push_back(oid3);
-    sol.bins[v2].push_back(oid1);
-    sol.bins[v2].push_back(oid2);
-
-    sol.bin_load[v1] += d3 - d12;
-    sol.bin_load[v2] += d12 - d3;
-
-    sol.total_cost = new_cost;
-    sol.penalty = new_penalty;
-    sol.fitness = new_fitness;
-    sol.is_feasible = (new_penalty < EPSILON);
-}
-
-void apply_2_2(Solution& sol, int v1, int pos1a, int pos1b, int v2, int pos2a, int pos2b, double new_cost, double new_penalty, double new_fitness) {
-    int oid1 = sol.bins[v1][pos1a];
-    int oid2 = sol.bins[v1][pos1b];
-    int oid3 = sol.bins[v2][pos2a];
-    int oid4 = sol.bins[v2][pos2b];
-
-    int d12 = orders[oid1 - 1].d + orders[oid2 - 1].d;
-    int d34 = orders[oid3 - 1].d + orders[oid4 - 1].d;
-
-    // Xóa v1
-    int hi1 = max(pos1a, pos1b), lo1 = min(pos1a, pos1b);
-    swap(sol.bins[v1][hi1], sol.bins[v1].back());
-    sol.bins[v1].pop_back();
-    swap(sol.bins[v1][lo1], sol.bins[v1].back());
-    sol.bins[v1].pop_back();
-
-    // Xóa v2
-    int hi2 = max(pos2a, pos2b), lo2 = min(pos2a, pos2b);
-    swap(sol.bins[v2][hi2], sol.bins[v2].back());
-    sol.bins[v2].pop_back();
-    swap(sol.bins[v2][lo2], sol.bins[v2].back());
-    sol.bins[v2].pop_back();
-
-    sol.bins[v1].push_back(oid3);
-    sol.bins[v1].push_back(oid4);
-    sol.bins[v2].push_back(oid1);
-    sol.bins[v2].push_back(oid2);
-
-    sol.bin_load[v1] += d34 - d12;
-    sol.bin_load[v2] += d12 - d34;
 
     sol.total_cost = new_cost;
     sol.penalty = new_penalty;
@@ -699,10 +611,6 @@ Solution tabu_search() {
                 apply_1_1(current, best_v1, best_p1a, best_v2, best_p2a, final_cost, final_penalty, best_nf);
             } else if (mt == "2-0") {
                 apply_2_0(current, best_v1, best_p1a, best_p1b, best_v2, final_cost, final_penalty, best_nf);
-            } else if (mt == "2-1") {
-                apply_2_1(current, best_v1, best_p1a, best_p1b, best_v2, best_p2a, final_cost, final_penalty, best_nf);
-            } else if (mt == "2-2") {
-                apply_2_2(current, best_v1, best_p1a, best_p1b, best_v2, best_p2a, best_p2b, final_cost, final_penalty, best_nf);
             }
 
             if (current.fitness < best.fitness - EPSILON) {
@@ -731,16 +639,6 @@ Solution tabu_search() {
             } else if (mt == "2-0") {
                 rev.order1 = best_tm.order1;
                 rev.order2 = best_tm.order2;
-            } else if (mt == "2-1") {
-                rev.order1 = best_tm.order3;
-                rev.order2 = -1;
-                rev.order3 = best_tm.order1;
-                rev.order4 = best_tm.order2;
-            } else if (mt == "2-2") {
-                rev.order1 = best_tm.order3;
-                rev.order2 = best_tm.order4;
-                rev.order3 = best_tm.order1;
-                rev.order4 = best_tm.order2;
             }
             tabu_list.push_back(rev);
 
